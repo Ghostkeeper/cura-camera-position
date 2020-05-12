@@ -1,14 +1,12 @@
 import os
 
 from PyQt5.QtCore import QObject
-from PyQt5.QtQml import qmlRegisterType
 from UM.Extension import Extension
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 from UM.i18n import i18nCatalog
 
 from cura.CuraApplication import CuraApplication
-from .ActualCameraPosition import ActualCameraPosition
 
 i18n_catalog = i18nCatalog("cura")
 
@@ -39,9 +37,6 @@ class CameraPositionExtension(QObject, Extension):
     def _createView(self) -> None:
         Logger.log("d", "Creating Camera Position plugin view.")
 
-        qmlRegisterType(ActualCameraPosition, 'ActualCameraPosition', 1, 0, 'ActualCameraPosition')
         plugin_path = PluginRegistry.getInstance().getPluginPath(self.getPluginId())
         path = os.path.join(plugin_path, "resources", "qml", "CameraPositionPanel.qml")
         self._view = CuraApplication.getInstance().createQmlComponent(path, {"manager": self})
-        self._camPos: ActualCameraPosition = self._view.findChild(ActualCameraPosition, "cameraPosition")
-        self._camPos.setController(CuraApplication.getInstance().getController())

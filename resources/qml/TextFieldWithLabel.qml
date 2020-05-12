@@ -1,4 +1,4 @@
-import QtQuick 2.10
+import QtQuick 2.1
 import QtQuick.Controls 2.3
 
 import UM 1.4 as UM
@@ -6,10 +6,14 @@ import Cura 1.0 as Cura
 
 Item
 {
+    id: base
+    
     property alias value: textField.text
     property alias text: label.text
-    property alias validator: textField.validator
+    
     height: childrenRect.height
+    
+    signal editingFinished();
 
     Label
     {
@@ -23,19 +27,20 @@ Item
         }
     }
 
-    Cura.TextField
+    Cura.ReadOnlyTextField
     {
         id: textField
-        width: (parent.width / 2) | 0
+        width: (parent.width / 4) | 0
+        
         anchors
         {
             right: parent.right
         }
         text: "0"
-        validator: IntValidator
+        
+        onEditingFinished:
         {
-            bottom: -5000
-            top: 5000
+            base.editingFinished();
         }
     }
 }
